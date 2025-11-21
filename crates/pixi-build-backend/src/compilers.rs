@@ -35,6 +35,7 @@ pub fn default_compiler(platform: &Platform, language: &str) -> String {
     match language {
         // Platform agnostic compilers
         "fortran" => "gfortran",
+        "cuda" => "cuda-nvcc",
         // Platform specific compilers
         "c" | "cxx" => {
             if platform.is_windows() {
