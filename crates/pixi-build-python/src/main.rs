@@ -13,12 +13,13 @@ use pixi_build_backend::{
 };
 use pixi_build_types::ProjectModelV1;
 use pyproject_toml::PyProjectToml;
+use rattler_build::recipe::variable::Variable;
 use rattler_conda_types::{ChannelUrl, Platform, package::EntryPoint};
 use recipe_stage0::matchspec::PackageDependency;
 use recipe_stage0::recipe::{self, NoArchKind, Python, Script};
 use std::collections::HashSet;
 use std::{
-    collections::BTreeSet,
+    collections::{BTreeMap, BTreeSet},
     path::{Path, PathBuf},
     str::FromStr,
     sync::Arc,
@@ -268,6 +269,23 @@ impl GenerateRecipe for PythonGenerator {
             .map(|s| s.to_string())
             .chain(config.extra_input_globs.clone())
             .collect())
+    }
+
+    fn default_variants(
+        &self,
+        host_platform: Platform,
+    ) -> miette::Result<BTreeMap<NormalizedKey, Vec<Variable>>> {
+        let mut variants = BTreeMap::new();
+
+        // Add cuda_compiler variant for platforms that support CUDA (Linux and Windows)
+        if host_platform.is_linux() || host_platform.is_windows() {
+            variants.insert(
+                NormalizedKey::from("cuda_compiler"),
+                vec![Variable::from("cuda-nvcc")],
+            );
+        }
+
+        Ok(variants)
     }
 }
 

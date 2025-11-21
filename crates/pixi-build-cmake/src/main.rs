@@ -155,6 +155,14 @@ impl GenerateRecipe for CMakeGenerator {
             variants.insert(NormalizedKey::from("cxx_compiler"), vec!["vs2019".into()]);
         }
 
+        // Add cuda_compiler variant for platforms that support CUDA (Linux and Windows)
+        if host_platform.is_linux() || host_platform.is_windows() {
+            variants.insert(
+                NormalizedKey::from("cuda_compiler"),
+                vec!["cuda-nvcc".into()],
+            );
+        }
+
         Ok(variants)
     }
 }

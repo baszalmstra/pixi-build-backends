@@ -4247,6 +4247,7 @@ dependencies = [
  "pixi-build-backend",
  "pixi_build_types",
  "pyproject-toml",
+ "rattler-build",
  "rattler_conda_types",
  "recipe-stage0",
  "serde",
